@@ -1,6 +1,11 @@
 (ns spinningserver.handler
   (:require [compojure.core :refer [defroutes routes wrap-routes]]
             [spinningserver.routes.home :refer [home-routes]]
+
+            [spinningserver.routes.user :refer [user-routes]]
+            [spinningserver.routes.factory :refer [factory-routes]]
+            [spinningserver.routes.customer :refer [customer-routes]]
+            [spinningserver.public.websocket :as websocket]
             
             [spinningserver.middleware :as middleware]
             [spinningserver.session :as session]
@@ -55,7 +60,10 @@
   ;;start the expired session cleanup job
   (session/start-cleanup-job!)
   (timbre/info "\n-=[ spinningserver started successfully"
-               (when (env :dev) "using the development profile") "]=-"))
+               (when (env :dev) "using the development profile") "]=-")
+
+  (websocket/start-server 3003)
+  )
 
 (defn destroy
   "destroy will be called when your application
@@ -67,7 +75,7 @@
 
 (def app
   (-> (routes
-        
-        (wrap-routes home-routes middleware/wrap-csrf)
+        (wrap-routes [home-routes user-routes
+          factory-routes customer-routes] middleware/wrap-csrf)
         base-routes)
       middleware/wrap-base))
