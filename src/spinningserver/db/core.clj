@@ -95,9 +95,20 @@
       db "customeruser" {:username username}
       )
     )
+
+  (defn get-factory-byfactoryname [factoryname]
+    (mc/find-one-as-map
+      db "factoryinfo" {:factoryname factoryname}
+      )
+    )
   (defn make-new-customer [customer]
     (mc/insert-and-return db "customeruser" customer)
     )
+
+  (defn make-new-factory [factory]
+    (mc/insert-and-return db "factoryinfo" factory)
+    )
+
   (defn get-factorys-byid [ids]
     (mc/find-maps
       db "factoryuser" {:_id {$in ids}}

@@ -57,9 +57,9 @@
 
     )
 
-  (POST "/customer/newcustomer" [username realname password]
+  (POST "/customer/newcustomer" [factoryname factoryaddress factoryinfo username realname password]
 
-    (customer/newcustomer username realname password)
+    (customer/newcustomer factoryname factoryaddress factoryinfo  username realname password)
 
     )
 
