@@ -57,7 +57,7 @@ db.factoryuser.insert(
       factoryid:'',
       realname: '沈括',
       tel:'1234433456',
-      usertype : 0    //0:管理员 1:boss 2 :办公 3:车间
+      usertype : 0    //0:boss 1 :办公 2:车间
    }
 )
 
@@ -68,7 +68,8 @@ db.factorygoods.insert(
     goodsname:'xx印花',
     price:'',
     unit:'',
-    colors:''
+    imgs:[],
+    colors:[]
     }
 
 )

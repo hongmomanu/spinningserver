@@ -31,9 +31,9 @@
 
   (GET "/factory/sendmsgtocustomer" [factoryid customerid message] (factory/sendmsgtocustomer factoryid customerid message))
 
-  (POST "/factory/newfactory" req
+  (POST "/factory/newfactory" [factoryname factoryaddress factoryinfo  username realname password]
 
-    (factory/newfactory req)
+    (factory/newfactory factoryname factoryaddress factoryinfo  username realname password)
 
     )
 
@@ -53,6 +53,12 @@
  (POST "/factory/getmycustomer" [factoryid]
 
     (factory/getmycustomer  factoryid)
+
+    )
+
+  (GET "/factory/getgoodsbyfid" [factoryid]
+
+    (factory/getgoodsbyfid  factoryid)
 
     )
 

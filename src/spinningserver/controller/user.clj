@@ -51,21 +51,25 @@
         (json/write-str customers)
     )
 )
+(defn getmenbers [factoryid]
+
+  (let [
+         factorys (db/get-factorys-by-cond {:factoryid factoryid })
+         ]
+
+        (json/write-str factorys)
+
+    )
+  )
 
 (defn factorylogin [username password]
     (let [
         factory (db/get-factory-byusername username)
-        userinfo (:userinfo factory)
+
     ]
-      (if (and factory (= password (:password userinfo)))
-
-        (if (:isconfirmed factory) (json/write-str {:success true :user factory})
-          (json/write-str {:success false :message "账户未审核"})
-          )
-
-        (json/write-str {:success false :message "用户名密码错误"})
-
-        )
+      (if (and factory (= password (:password factory)))(json/write-str {:success true :user factory
+                                          :factoryinfo (db/get-factoryinfo-byid (ObjectId. (:factoryid factory)))})
+        (json/write-str {:success false}))
 
     )
 )

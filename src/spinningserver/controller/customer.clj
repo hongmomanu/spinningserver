@@ -408,27 +408,21 @@
 
   )
 
-(defn newcustomer [factoryname factoryaddress factoryinfo  username realname password]
+(defn newcustomer [ username realname password]
 
   (try
     (let [
            customer (db/get-customer-byusername username)
-           factory (db/get-factory-byfactoryname factoryname)
+
 
            ]
-      (if (nil? customer) (let [
-                                 newfactory (db/make-new-customer
-                                               {:username username
-                                                :realname realname
-                                                :password password
-                                                })
-                                 ]
+      (if (nil? customer)
                             (resp/json {:success true :message (db/make-new-customer
                                                                  {:username username
                                                                   :realname realname
                                                                   :password password
                                                                   })})
-                            ) (resp/json {:success true :message "用户已存在"}))
+                             (resp/json {:success true :message "用户已存在"}))
 
       )
 

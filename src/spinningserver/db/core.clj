@@ -53,8 +53,8 @@
     (mc/update db "factoryuser" cond {$set modified} )
     )
 
-  (defn make-new-factory [customer]
-    (mc/insert-and-return db "factoryuser" customer)
+  (defn make-new-factory-user [user]
+    (mc/insert-and-return db "factoryuser" user)
     )
 
   (defn get-factorys-by-cond [cond]
@@ -87,7 +87,7 @@
 
   (defn get-factory-byusername [username]
     (mc/find-one-as-map
-      db "factoryuser" {:userinfo.username username}
+      db "factoryuser" {:username username}
       )
     )
   (defn get-customer-byusername [username]
@@ -99,6 +99,21 @@
   (defn get-factory-byfactoryname [factoryname]
     (mc/find-one-as-map
       db "factoryinfo" {:factoryname factoryname}
+      )
+    )
+  (defn get-factoryinfo-byid [oid]
+    (mc/find-map-by-id
+      db "factoryinfo" oid
+      )
+    )
+  (defn get-goods-byid [oid]
+    (mc/find-map-by-id
+      db "factorygoods" oid
+      )
+    )
+  (defn get-goods-by-cond [cond]
+    (mc/find-maps
+      db "factorygoods" cond
       )
     )
   (defn make-new-customer [customer]

@@ -401,24 +401,33 @@
 
   )
 
-(defn newfactory [req]
+(defn newfactory [factoryname factoryaddress factoryinfo  username realname password]
 
   (try
     (let [
-           formdata(:form-params req)
-          ; formdata (apply merge (map #(hash-map % (get formdata %)) (keys formdata)))
 
+           factory (db/get-factory-byusername username)
+           factoryinfo (db/get-factory-byfactoryname factoryname)
 
-           userinfodata (dissoc formdata "loc" )
-
-           factory (db/get-factory-byusername (get  userinfodata "username"))
-
-           user  {:userinfo userinfodata :isconfirmed false :loc (json/read-str (get formdata "loc")) }
 
            ]
-      (if (nil? factory) (resp/json {:success true :message "等待审核" :data (db/make-new-factory user)})
-        (resp/json {:success false :message "用户名已存在"})
-        )
+
+      (if (and (nil? factoryinfo)(nil? factory)) (let [
+                                                     newfactory (db/make-new-factory
+                                                                  {:factoryname factoryname
+                                                                   :factoryaddress factoryaddress
+                                                                   :factoryinfo factoryinfo
+                                                                   })
+                                                     ]
+                                                (resp/json {:success true :message (db/make-new-factory-user
+                                                                                     {:username username
+                                                                                      :factoryid (str (:_id newfactory))
+                                                                                      :realname realname
+                                                                                      :password password
+                                                                                      :usertype 0
+                                                                                      })})
+                                                ) (resp/json {:success true :message "用户已存在"}))
+
 
       )
 
@@ -431,6 +440,10 @@
 
 
 
+  )
+
+(defn getgoodsbyfid [factoryid]
+  (resp/json (db/get-goods-by-cond {:factoryid factoryid}))
   )
 
 

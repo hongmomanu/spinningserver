@@ -74,8 +74,7 @@
   (timbre/info "shutdown complete!"))
 
 (def app
-  (-> (routes
-        (wrap-routes [home-routes user-routes
-          factory-routes customer-routes] middleware/wrap-csrf)
+  (-> (routes  home-routes user-routes
+               factory-routes customer-routes home-routes
         base-routes)
       middleware/wrap-base))
