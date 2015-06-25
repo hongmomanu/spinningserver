@@ -116,6 +116,10 @@
       db "factorygoods" cond
       )
     )
+  (defn make-new-goods [good]
+    (mc/insert db "factorygoods" good)
+    )
+
   (defn make-new-customer [customer]
     (mc/insert-and-return db "customeruser" customer)
     )
@@ -129,9 +133,6 @@
       db "factoryuser" {:_id {$in ids}}
       )
     )
-
-
-
 
 
   (defn get-relation-factory [cond]

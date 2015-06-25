@@ -445,10 +445,23 @@
 (defn getgoodsbyfid [factoryid]
   (resp/json (db/get-goods-by-cond {:factoryid factoryid}))
   )
+(defn addgoodsbyfid  [factoryid goodsname price unit colors imgs]
 
+  (try
+    (do (db/make-new-goods {:factoryid factoryid :goodsname goodsname
+                        :price price :unit unit :colors colors :imgs imgs})
+      (resp/json {:success true})
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
+
+  )
 
 (defn addfactorybyid [fromid toid channel-hub-key]
-  (println 111111111111)
   (try
     (let [
            rels (db/get-relation-factory {$or [{:factoryid fromid :rid  toid} {:factoryid toid :rid fromid}]})
@@ -458,7 +471,6 @@
 
 
            ]
-      (println 2222222222222222)
 
       (if (> (count rels) 0) (resp/json {:success false :message  "关系已经存在"} ) (
 

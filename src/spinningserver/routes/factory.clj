@@ -62,6 +62,12 @@
 
     )
 
+  (GET "/factory/addgoodsbyfid" [factoryid goodsname price unit colors imgs]
+
+    (factory/addgoodsbyfid  factoryid goodsname price unit colors imgs)
+
+    )
+
 
 
  )

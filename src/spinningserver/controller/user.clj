@@ -67,7 +67,7 @@
   )
 
 (defn factorylogin [username password]
-  (println "22222222222222")
+  ;(println "22222222222222")
     (let [
         factory (db/get-factory-byusername username)
 
