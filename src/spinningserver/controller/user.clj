@@ -51,6 +51,10 @@
         (json/write-str customers)
     )
 )
+(defn patientlogin [user pass]
+
+   (json/write-str {:success true})
+  )
 (defn getmenbers [factoryid]
 
   (let [
@@ -63,6 +67,7 @@
   )
 
 (defn factorylogin [username password]
+  (println "22222222222222")
     (let [
         factory (db/get-factory-byusername username)
 
