@@ -248,7 +248,7 @@
 
 
 ;;factory recommend
-(defn sendmycustomerTofactory [customerid factoryid fromfactoryid rectype channel-hub-key ]
+(defn sendmycustomerTofactory [customerid factoryid fromfactoryid text rectype channel-hub-key ]
 
     (try
 
@@ -260,6 +260,7 @@
                  channeld (get @channel-hub-key factoryid)
                  recommend (db/makerecommend {:customerid customerid :factoryid factoryid} {:customerid customerid :factoryid factoryid :fromid fromfactoryid
                                                                                         :isfactoryaccepted false :iscustomeraccepted false :rectype rectype
+                                                                                            :text text
                                                                                         :isreadbyfactory false :isreadbycustomer false})
 
                  recommendmap (db/findrecommend {:customerid customerid :factoryid factoryid})
@@ -438,18 +439,37 @@
 
     )
 
-
-
   )
 
 (defn getgoodsbyfid [factoryid]
   (resp/json (db/get-goods-by-cond {:factoryid factoryid}))
+  )
+
+(defn getgoodsbykeyword  [keyword page limit]
+
+  (resp/json (db/get-goods-by-keyword keyword (read-string page) (read-string limit)))
+
   )
 (defn addgoodsbyfid  [factoryid goodsname price unit colors imgs]
 
   (try
     (do (db/make-new-goods {:factoryid factoryid :goodsname goodsname
                         :price price :unit unit :colors colors :imgs imgs})
+      (resp/json {:success true})
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
+
+  )
+(defn altergoodsbyfid  [gid goodsname price unit colors imgs]
+
+  (try
+    (do (db/alter-goods { :goodsname goodsname
+                        :price price :unit unit :colors colors :imgs imgs} {:_id (ObjectId. gid)})
       (resp/json {:success true})
       )
     (catch Exception ex

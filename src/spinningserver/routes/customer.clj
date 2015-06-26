@@ -16,6 +16,8 @@
 
   (GET "/customer/getmyfactorysbyid" [ customerid ] (customer/getmyfactorysbyid  customerid true))
 
+  (POST "/customer/ismyfactorysbyid" [ customerid factoryid] (customer/ismyfactorysbyid  customerid factoryid))
+
 
   (GET "/customer/getquickfactorysbyid" [ customerid distance lon lat]
     (println 1111 customerid distance lon lat)
@@ -23,11 +25,13 @@
 
 
 
-  (POST "/customer/sendmyfactoryTocustomer"[customerid factoryid fromcustomerid] (factory/sendmycustomerTofactory
-                                                                           customerid factoryid fromcustomerid
+  (POST "/customer/sendmyfactoryTocustomer"[customerid factoryid fromcustomerid text] (factory/sendmycustomerTofactory
+                                                                           customerid factoryid fromcustomerid text
                                                                            0
                                                                            websocket/channel-hub-key
                                                                            ))
+
+
 
   (POST "/customer/acceptrecommend"[rid ] (factory/acceptrecommend rid 0 websocket/channel-hub-key))
 

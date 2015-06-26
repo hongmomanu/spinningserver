@@ -111,6 +111,14 @@
       db "factorygoods" oid
       )
     )
+
+  (defn get-goods-by-keyword [keyword page limit]
+
+    (with-collection db "factorygoods"
+      (find {:goodsname {$regex (str ".*" keyword ".*")}})
+      (paginate :page page :per-page limit))
+    )
+
   (defn get-goods-by-cond [cond]
     (mc/find-maps
       db "factorygoods" cond
@@ -118,6 +126,10 @@
     )
   (defn make-new-goods [good]
     (mc/insert db "factorygoods" good)
+    )
+
+  (defn alter-goods [modified cond]
+    (mc/update db "factorygoods" cond {$set modified} {:multi true})
     )
 
   (defn make-new-customer [customer]

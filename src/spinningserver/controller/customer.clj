@@ -41,6 +41,18 @@
 
   )
 
+(defn ismyfactorysbyid [customerid factoryid]
+
+  (let [
+         user (first (db/get-factorys-by-cond {:factoryid factoryid :usertype 0}))
+         num (count (db/get-relation-customer {:customerid customerid :factoryid (str (:_id user))}))
+         ]
+
+        (if(> num 0) (resp/json {:success true :user user}) (resp/json {:success false :user user}))
+    )
+
+  )
+
 
 
 (defn getmyfactorysbyid [customerid isreturn]
@@ -417,11 +429,12 @@
 
            ]
       (if (nil? customer)
-                            (resp/json {:success true :message (db/make-new-customer
+                            (resp/json {:success true :message (conj (db/make-new-customer
                                                                  {:username username
                                                                   :realname realname
                                                                   :password password
-                                                                  })})
+
+                                                                  }) {:usertype 3})})
                              (resp/json {:success true :message "用户已存在"}))
 
       )

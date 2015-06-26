@@ -11,14 +11,14 @@
 (defroutes factory-routes
 
   (GET "/factory/test" [] (str "test"))
-  (POST "/factory/sendmycustomerTofactory"[customerid factoryid fromfactoryid] (factory/sendmycustomerTofactory
-                                                                           customerid factoryid fromfactoryid
+  (POST "/factory/sendmycustomerTofactory"[customerid factoryid fromfactoryid text] (factory/sendmycustomerTofactory
+                                                                           customerid factoryid fromfactoryid text
                                                                            1
                                                                            websocket/channel-hub-key
                                                                            ))
 
-  (POST "/factory/sendmyfactoryTocustomer"[customerid factoryid fromfactoryid] (factory/sendmycustomerTofactory
-                                                                           customerid factoryid fromfactoryid
+  (POST "/factory/sendmyfactoryTocustomer"[customerid factoryid fromfactoryid text] (factory/sendmycustomerTofactory
+                                                                           customerid factoryid fromfactoryid text
                                                                            1
                                                                            websocket/channel-hub-key
                                                                            ))
@@ -51,21 +51,23 @@
     )
 
  (POST "/factory/getmycustomer" [factoryid]
-
     (factory/getmycustomer  factoryid)
-
     )
 
   (GET "/factory/getgoodsbyfid" [factoryid]
-
     (factory/getgoodsbyfid  factoryid)
-
     )
 
-  (GET "/factory/addgoodsbyfid" [factoryid goodsname price unit colors imgs]
+  (GET "/factory/getgoodsbykeyword" [keyword page limit]
+    (factory/getgoodsbykeyword  keyword page limit)
+    )
 
+  (POST "/factory/addgoodsbyfid" [factoryid goodsname price unit colors imgs]
     (factory/addgoodsbyfid  factoryid goodsname price unit colors imgs)
+    )
 
+  (POST "/factory/altergoodsbyfid" [gid goodsname price unit colors imgs]
+    (factory/altergoodsbyfid  gid goodsname price unit colors imgs)
     )
 
 

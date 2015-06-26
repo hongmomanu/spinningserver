@@ -84,7 +84,7 @@
 
     ]
 
-    (if (and customer (= password (:password customer)))(json/write-str {:success true :user customer})
+    (if (and customer (= password (:password customer)))(json/write-str {:success true :user (conj customer {:usertype 3})})
     (json/write-str {:success false}))
     )
 )
