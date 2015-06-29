@@ -58,7 +58,13 @@
 (defn getmyfactorysbyid [customerid isreturn]
   (let [
          myfactorys (db/get-relation-customer {:customerid customerid})
-         factoryinfo (map #(db/get-factory-byid (ObjectId. (:factoryid %))) myfactorys)
+         factoryinfo (map #(
+                             let [factoryuser  (db/get-factory-byid (ObjectId. (:factoryid %)))
+                                  factoryinfo (db/get-factoryinfo-byid (ObjectId. (:factoryid factoryuser)))
+                                  ]
+                             (conj {:factoryuser factoryuser} {:factoryinfo factoryinfo})
+
+                             ) myfactorys)
          ]
     (if isreturn (resp/json factoryinfo) factoryinfo)
     )

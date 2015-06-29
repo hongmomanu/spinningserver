@@ -189,6 +189,22 @@
       ))
   )
 
+(defn getfactoryinfobyid [factoryid]
+  (let [
+         factoryuser  (first (db/get-factorys-by-cond {:factoryid factoryid :usertype 0}))
+         factoryinfo (db/get-factoryinfo-byid (ObjectId. factoryid ))
+         ]
+
+
+      (resp/json {:success true :factoryuser factoryuser :factoryinfo factoryinfo})
+
+
+    )
+
+
+
+  )
+
 (defn sendrecommendconfirm [recommend channel-hub-key]
 
   (println "sendrecommendconfirm")

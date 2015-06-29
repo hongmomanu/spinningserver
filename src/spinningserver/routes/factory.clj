@@ -23,7 +23,7 @@
                                                                            websocket/channel-hub-key
                                                                            ))
 
-  (POST "/factory/addblacklist"[customerid factoryid ] (factory/addblacklist customerid factoryid ))
+  (POST "/factory/addblacklist" [customerid factoryid ] (factory/addblacklist customerid factoryid ))
 
   (POST "/factory/acceptrecommend"[rid ] (factory/acceptrecommend rid 1 websocket/channel-hub-key))
   (POST "/factory/acceptquickapply"[aid customerid factoryid addmoney]
@@ -52,6 +52,10 @@
 
  (POST "/factory/getmycustomer" [factoryid]
     (factory/getmycustomer  factoryid)
+    )
+
+  (POST "/factory/getfactoryinfobyid" [factoryid]
+    (factory/getfactoryinfobyid  factoryid)
     )
 
   (GET "/factory/getgoodsbyfid" [factoryid]
