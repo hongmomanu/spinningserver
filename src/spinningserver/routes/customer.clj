@@ -12,7 +12,7 @@
 
 (defroutes customer-routes
 
-  (GET "/customer/getmycustomersbyid" [ customerid ] (customer/getmycustomersbyid  customerid ))
+  (GET "/customer/getmycustomersbyid" [ userid ] (customer/getmycustomersbyid  userid ))
 
   (GET "/customer/getmyfactorysbyid" [ customerid ] (customer/getmyfactorysbyid  customerid true))
 

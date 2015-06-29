@@ -19,23 +19,25 @@
 
 
 (defn customer-process [docwithcustomer]
-  (map #(conj {:customerinfo (db/get-customer-byid (ObjectId. (:customerid %)))}
-          {:factoryinfo (db/get-factory-byid (ObjectId. (:factoryid %))) } ) docwithcustomer)
+  (conj {:customerinfo (db/get-customer-byid (ObjectId. (:customerid docwithcustomer)))}
+          ;{:factoryinfo (db/get-factory-byid (ObjectId. (:factoryid docwithcustomer))) }
+    {}
+
+    )
   )
 
-(defn getmycustomersbyid [customerid]
+(defn getmycustomersbyid [userid]
   (let [
-         myfactorys (db/get-relation-customer {:customerid customerid})
-         factoryallcustomers (map #(customer-process (db/get-relation-customer {:factoryid (:factoryid %)})) myfactorys)
-         customers (apply concat  factoryallcustomers)
-         filters (filter (fn [x]
-                           (not= (:_id (:customerinfo x)) customerid))
-                   customers)
+         myfactorys (db/get-relation-customer {:factoryid userid})
+         factoryallcustomers (map #(customer-process %) myfactorys)
+         ;customers (apply concat  factoryallcustomers)
+         ;filters (filter (fn [x]
+         ;                  (not= (:_id (:customerinfo x)) userid))
+         ;          customers)
          ]
 
 
-
-    (resp/json filters)
+    (resp/json factoryallcustomers)
 
     )
 
