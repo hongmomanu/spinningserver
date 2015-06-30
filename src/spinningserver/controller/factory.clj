@@ -489,6 +489,7 @@
   )
 
 (defn makegoodnumsbyid  [num factoryid goodsid]
+
   (let [
          nums (db/get-goodsnum-by-cond {:goodsid goodsid})
          num (if (= (count nums) 0) (read-string num)  (+ (read-string num) (:num (first nums)))  )
@@ -496,6 +497,8 @@
          ]
 
       (db/make-goodnum {:goodsid goodsid} {:goodsid goodsid :num num :factoryid factoryid})
+
+    (resp/json {:success true})
 
     )
 
