@@ -61,6 +61,15 @@
 
     )
 
+  (POST "/customer/makeorderbyid" [gid nums unit fromid factoryid colors]
+
+    (customer/makeorderbyid gid nums unit fromid factoryid colors)
+
+    )
+
+
+
+
   (POST "/customer/newcustomer" [username realname password]
 
     (customer/newcustomer  username realname password)

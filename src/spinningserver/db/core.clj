@@ -124,6 +124,22 @@
       db "factorygoods" cond
       )
     )
+
+  (defn get-goodsnum-by-cond [cond]
+    (mc/find-maps
+      db "factorygoodsnums" cond
+      )
+    )
+
+  (defn update-order-by-id [cond modified]
+    (mc/update db "factorygoodsorders" cond {$set modified} {:multi false})
+    )
+
+  (defn get-orders-by-cond [cond]
+    (mc/find-maps
+      db "factorygoodsorders" cond
+      )
+    )
   (defn make-new-goods [good]
     (mc/insert db "factorygoods" good)
     )
@@ -184,9 +200,21 @@
 
     )
 
+  (defn makeorder [data]
+
+    (mc/insert db "factorygoodsorders" data)
+    )
+
   (defn makerecommend [cond recommend]
 
     (mc/update db "recommend" cond {$set recommend} {:upsert true})
+
+    )
+
+
+  (defn make-goodnum  [cond recommend]
+
+    (mc/update db "factorygoodsnums" cond {$set recommend} {:upsert true})
 
     )
 

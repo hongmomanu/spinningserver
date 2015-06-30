@@ -45,7 +45,7 @@
                            )
          channel (get @channel-hub-key id)
         ;user (db/get-factory-byid  (ObjectId. id))
-        noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-factory-byid  (ObjectId. (:fromid %))))}) noreadmessage)
+         noreadmessage-userinfo (map #(conj % {:userinfo (db/get-factory-byid  (ObjectId. (:fromid %)))}) noreadmessage)
          noreadmessage-customerinfo (map #(conj % {:userinfo (db/get-customer-byid  (ObjectId. (:fromid %)))}) noreadmessage-customer)
          noreadrecommend-userinfo (map #(noreadrecommend-process %) noreadrecommend)
         ]
@@ -459,6 +459,62 @@
 
 (defn getgoodsbyfid [factoryid]
   (resp/json (db/get-goods-by-cond {:factoryid factoryid}))
+  )
+
+(defn getordersbyfid [factoryid]
+
+  (let [
+          orders (db/get-orders-by-cond {:factoryid factoryid})
+          ordersdetail (do (map #(conj % {:goodinfo (db/get-goods-byid (ObjectId. (:gid %)))}) orders))
+         ]
+
+
+    (resp/json ordersdetail)
+
+    )
+
+
+  )
+
+(defn changestatusbyid  [status oid]
+
+
+    (db/update-order-by-id {:_id (ObjectId. oid)} {:status status})
+
+    (resp/json {:success true})
+
+
+
+
+  )
+
+(defn makegoodnumsbyid  [num factoryid goodsid]
+  (let [
+         nums (db/get-goodsnum-by-cond {:goodsid goodsid})
+         num (if (= (count nums) 0) (read-string num)  (+ (read-string num) (:num (first nums)))  )
+
+         ]
+
+      (db/make-goodnum {:goodsid goodsid} {:goodsid goodsid :num num :factoryid factoryid})
+
+    )
+
+  )
+
+(defn sendtowork [oid hasnum]
+  (db/update-order-by-id {:_id (ObjectId. oid)} {:status 1 :hasnum hasnum})
+  (resp/json {:success true})
+    )
+
+(defn gethasnumbygid  [gid]
+
+  (let [
+         goodsnum (db/get-goodsnum-by-cond {:goodsid gid})
+         ]
+
+    (resp/json {:success true :data goodsnum})
+    )
+
   )
 
 (defn getgoodsbykeyword  [keyword page limit]

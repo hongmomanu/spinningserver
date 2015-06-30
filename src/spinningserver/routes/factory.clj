@@ -62,12 +62,33 @@
     (factory/getgoodsbyfid  factoryid)
     )
 
+  (GET "/factory/getordersbyfid" [factoryid]
+    (factory/getordersbyfid  factoryid)
+    )
+
   (GET "/factory/getgoodsbykeyword" [keyword page limit]
     (factory/getgoodsbykeyword  keyword page limit)
     )
 
   (POST "/factory/addgoodsbyfid" [factoryid goodsname price unit colors imgs]
     (factory/addgoodsbyfid  factoryid goodsname price unit colors imgs)
+    )
+
+  (POST "/factory/gethasnumbygid" [gid]
+    (factory/gethasnumbygid  gid)
+    )
+  (POST "/factory/sendtowork" [_id hasnum]
+    (factory/sendtowork  _id hasnum)
+    )
+
+  (POST "/factory/changestatusbyid" [status oid]
+    (factory/changestatusbyid  status oid)
+    )
+
+  (POST "/factory/makegoodnumsbyid" [num factoryid goodsid]
+
+      (factory/makegoodnumsbyid  num factoryid goodsid)
+
     )
 
   (POST "/factory/altergoodsbyfid" [gid goodsname price unit colors imgs]

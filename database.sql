@@ -78,8 +78,23 @@ db.factorygoods.insert(
 db.factorygoodsnums.insert(
     {
     goodsid:'',
-    num:''
+    factoryid:'',
+    num:'',
     unit:''
+    }
+
+)
+
+//工厂订单
+db.factorygoodsorders.insert(
+    {
+    goodsid:'',
+    factoryid:'',
+    colors:'',
+    num:'',
+    unit:'',
+    fromid:'',
+    status:'' //0 新订单,1 发给工厂, 2 正在生产, 3 生产完成 4 完成订单
     }
 
 )
