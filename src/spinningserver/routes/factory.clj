@@ -37,6 +37,12 @@
 
     )
 
+  (POST "/factory/newfactoryuser" [ username realname password factoryid usertype]
+
+    (factory/newfactoryuser  username realname password factoryid usertype)
+
+    )
+
 
   (POST "/factory/updatefactorylocation" [lon lat factoryid]
 

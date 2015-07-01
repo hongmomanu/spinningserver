@@ -418,6 +418,41 @@
 
   )
 
+
+(defn newfactoryuser [username realname password factoryid usertype]
+
+  (try
+    (let [
+
+           factory (db/get-factory-byusername username)
+
+
+           ]
+
+      (if (nil? factory)  (resp/json {:success true :message (db/make-new-factory-user
+                                                                                        {:username username
+                                                                                         :factoryid factoryid
+                                                                                         :realname realname
+                                                                                         :password password
+                                                                                         :usertype (read-string usertype)
+                                                                                         })})
+        (resp/json {:success false :message "用户已存在"})
+                                                   )
+
+
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
+
+
+
+  )
+
 (defn newfactory [factoryname factoryaddress factoryinfo  username realname password]
 
   (try

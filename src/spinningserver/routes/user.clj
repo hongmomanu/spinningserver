@@ -15,7 +15,7 @@
   (GET "/user/getcustomersbyid" [id] (user/getcustomersbyid id))
   (POST "/user/factorylogin" [username password] (user/factorylogin username password))
   (POST "/user/customerlogin" [username password] (user/customerlogin username password))
-  (POST "/user/getmenbers" [factoryid] (user/getmenbers factoryid))
+  (GET "/user/getmenbers" [factoryid] (user/getmenbers factoryid))
   (POST "/user/patientlogin" [username password] (user/patientlogin username password))
 
  )
