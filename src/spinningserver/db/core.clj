@@ -53,6 +53,10 @@
     (mc/update db "factoryuser" cond {$set modified} )
     )
 
+  (defn del-factory-user [oid]
+    (mc/remove-by-id db "factoryuser" oid)
+    )
+
   (defn make-new-factory-user [user]
     (mc/insert-and-return db "factoryuser" user)
     )
@@ -135,9 +139,10 @@
     (mc/update db "factorygoodsorders" cond {$set modified} {:multi false})
     )
 
-  (defn get-orders-by-cond [cond]
+  (defn get-orders-by-cond [cond stausarr]
+
     (mc/find-maps
-      db "factorygoodsorders" cond
+      db "factorygoodsorders" (conj cond {:status {$in stausarr}})
       )
     )
   (defn make-new-goods [good]

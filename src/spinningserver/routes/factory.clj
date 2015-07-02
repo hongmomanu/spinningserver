@@ -42,6 +42,16 @@
     (factory/newfactoryuser  username realname password factoryid usertype)
 
     )
+  (POST "/factory/editfactoryuser" [ _id realname password factoryid]
+
+    (factory/editfactoryuser  _id realname password factoryid)
+
+    )
+  (POST "/factory/delfactoryuser" [ _id ]
+
+    (factory/delfactoryuser  _id)
+
+    )
 
 
   (POST "/factory/updatefactorylocation" [lon lat factoryid]
@@ -68,8 +78,8 @@
     (factory/getgoodsbyfid  factoryid)
     )
 
-  (GET "/factory/getordersbyfid" [factoryid]
-    (factory/getordersbyfid  factoryid)
+  (GET "/factory/getordersbyfid" [factoryid status]
+    (factory/getordersbyfid  factoryid status)
     )
 
   (GET "/factory/getgoodsbykeyword" [keyword page limit]

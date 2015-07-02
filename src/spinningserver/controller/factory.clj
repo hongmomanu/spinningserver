@@ -418,6 +418,39 @@
 
   )
 
+(defn editfactoryuser  [id realname password factoryid]
+  (try
+
+    (do
+      (db/update-factory {:_id (ObjectId. id)} {:realname realname :password password})
+      (resp/json {:success true})
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
+
+  )
+
+(defn delfactoryuser [id]
+
+  (try
+
+    (do
+      (db/del-factory-user (ObjectId. id))
+      (resp/json {:success true})
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
+  )
 
 (defn newfactoryuser [username realname password factoryid usertype]
 
@@ -496,10 +529,11 @@
   (resp/json (db/get-goods-by-cond {:factoryid factoryid}))
   )
 
-(defn getordersbyfid [factoryid]
+(defn getordersbyfid [factoryid status]
 
   (let [
-          orders (db/get-orders-by-cond {:factoryid factoryid})
+          stausarr (clojure.string/split status #",")
+          orders (db/get-orders-by-cond {:factoryid factoryid} stausarr)
           ordersdetail (do (map #(conj % {:goodinfo (db/get-goods-byid (ObjectId. (:gid %)))}) orders))
          ]
 
