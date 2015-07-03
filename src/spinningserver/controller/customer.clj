@@ -46,7 +46,7 @@
 (defn makeorderbyid [gid num unit fromid factoryid colors]
 
   (let [
-         makeorder (db/makeorder {:gid gid :num (read-string num) :unit unit :factoryid factoryid :colors colors :fromid fromid :status 0 :time (l/local-now)})
+         makeorder (db/makeorder {:gid gid :num (read-string num) :unit unit :factoryid factoryid :colors colors :fromid fromid :status "0" :time (l/local-now)})
 
          ]
 

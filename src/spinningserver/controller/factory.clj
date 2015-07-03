@@ -574,7 +574,7 @@
   )
 
 (defn sendtowork [oid hasnum]
-  (db/update-order-by-id {:_id (ObjectId. oid)} {:status 1 :hasnum hasnum})
+  (db/update-order-by-id {:_id (ObjectId. oid)} {:status "1" :hasnum hasnum})
   (resp/json {:success true})
     )
 
