@@ -12,6 +12,7 @@
             ))
 
 (defn home-page []
+  ;(println (str commonfunc/datapath "upload/"))
   (layout/render
     "home.html" {:docs (-> "docs/docs.md" io/resource slurp)}))
 
@@ -33,6 +34,14 @@
       (nresp/json {:success true :filename filename})
       )
 
+    )
+
+  (GET "/install/:filename" req
+
+    (println req)
+    (str req)
+
+    ;;(file-response (str commonfunc/datapath "upload/" filename))
     )
 
   (GET "/files/:filename" [filename]

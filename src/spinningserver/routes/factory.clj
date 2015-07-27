@@ -81,9 +81,12 @@
   (GET "/factory/getordersbyfid" [factoryid status]
     (factory/getordersbyfid  factoryid status)
     )
+  (GET "/factory/getordersbycid" [clientid status]
+    (factory/getordersbycid  clientid status)
+    )
 
-  (GET "/factory/getgoodsbykeyword" [keyword page limit]
-    (factory/getgoodsbykeyword  keyword page limit)
+  (GET "/factory/getgoodsbykeyword" [keyword page limit ]
+    (factory/getgoodsbykeyword  keyword page limit )
     )
 
   (POST "/factory/addgoodsbyfid" [factoryid goodsname price unit colors imgs]
@@ -94,11 +97,11 @@
     (factory/gethasnumbygid  gid)
     )
   (POST "/factory/sendtowork" [_id hasnum]
-    (factory/sendtowork  _id hasnum)
+    (factory/sendtowork  _id hasnum websocket/channel-hub-key)
     )
 
   (POST "/factory/changestatusbyid" [status oid]
-    (factory/changestatusbyid  status oid)
+    (factory/changestatusbyid  status oid websocket/channel-hub-key)
     )
 
   (POST "/factory/makegoodnumsbyid" [num factoryid goodsid]

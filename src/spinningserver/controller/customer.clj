@@ -43,13 +43,25 @@
 
   )
 
-(defn makeorderbyid [gid num unit fromid factoryid colors]
+(defn sendrefresh [channel-hub-key id]
+  (let  [
+          channel (get @channel-hub-key id)
+          ]
+    (println "channel" id channel)
+    (when-not (nil? channel) (send! channel (json/write-str {:type "refresh" }) false))
+
+    )
+
+  )
+
+(defn makeorderbyid [gid num unit fromid factoryid colors channel-hub-key]
 
   (let [
          makeorder (db/makeorder {:gid gid :num (read-string num) :unit unit :factoryid factoryid :colors colors :fromid fromid :status "0" :time (l/local-now)})
-
+         factoryusers (db/get-factorys-by-cond {:factoryid factoryid})
          ]
 
+    (future (dorun (map #(sendrefresh channel-hub-key (str (:_id %))) factoryusers)))
     (resp/json {:success true})
     )
 
@@ -443,6 +455,18 @@
 
   )
 
+(defn alterorderbyid [oid num factoryid channel-hub-key]
+  (let [
+         makeorder (db/update-order-by-id {:_id (ObjectId. oid)} {:num num :status "0"})
+         factoryusers (db/get-factorys-by-cond {:factoryid factoryid})
+         ]
+    ;(println factoryusers)
+    (future (dorun (map #(sendrefresh channel-hub-key (str (:_id %))) factoryusers)))
+
+    (resp/json {:success true})
+    )
+
+  )
 (defn newcustomer [ username realname password]
 
   (try
@@ -458,7 +482,7 @@
                                                                   :password password
 
                                                                   }) {:usertype 3})})
-                             (resp/json {:success true :message "用户已存在"}))
+                             (resp/json {:success false :message "用户已存在"}))
 
       )
 

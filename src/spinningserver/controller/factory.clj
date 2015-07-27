@@ -230,12 +230,12 @@
 
        (chatprocess {:type "factorychat" :fromtype 0
                      :from customerid :to factoryid
-                     :content "已添加您作为我的医生" :imgid -1} channel-hub-key)
+                     :content "已添加您作为我的客戶" :imgid -1} channel-hub-key)
 
 
        (chatprocess {:type "factorychat" :fromtype 1
                      :from factoryid :to customerid
-                     :content "已添加您作为我的患者" :imgid -1} channel-hub-key)
+                     :content "已添加您作为我的商家" :imgid -1} channel-hub-key)
 
 
 
@@ -323,7 +323,7 @@
     (try
       (do
           (when-not (nil? channel)
-            (send! channel (json/write-str {:type "factorychat" :data [(conj message {:userinfo (:userinfo user)})]} ) false)
+            (send! channel (json/write-str {:type "factorychat" :data [(conj message {:userinfo user})]} ) false)
             (db/update-message  {:_id messagid} {:isread true} )
             )
         {:success true}
@@ -386,7 +386,7 @@
              (let [
                  newmessage (db/create-message message)
                  messagid (:_id newmessage)
-                 user (if (= fromtype 1) (:userinfo (db/get-factory-byid  (ObjectId. from))) (db/get-customer-byid  (ObjectId. from)))
+                 user (if (= fromtype 1) (db/get-factory-byid  (ObjectId. from)) (db/get-customer-byid  (ObjectId. from)))
                  channel (get @channel-hub-key to)
                  channelfrom (get @channel-hub-key from)
              ]
@@ -511,7 +511,7 @@
                                                                                       :password password
                                                                                       :usertype 0
                                                                                       })})
-                                                ) (resp/json {:success true :message "用户已存在"}))
+                                                ) (resp/json {:success false :message "工厂或用户已存在"}))
 
 
       )
@@ -534,6 +534,21 @@
   (let [
           stausarr (clojure.string/split status #",")
           orders (db/get-orders-by-cond {:factoryid factoryid} stausarr)
+          ordersdetail (do (map #(conj % {:clientinfo (db/get-customer-byid (ObjectId. (:fromid %))) :goodinfo (db/get-goods-byid (ObjectId. (:gid %)))}) orders))
+         ]
+
+
+    (resp/json ordersdetail)
+
+    )
+
+
+  )
+(defn getordersbycid [clientid status]
+
+  (let [
+          stausarr (clojure.string/split status #",")
+          orders (db/get-orders-by-cond {:fromid clientid} stausarr)
           ordersdetail (do (map #(conj % {:goodinfo (db/get-goods-byid (ObjectId. (:gid %)))}) orders))
          ]
 
@@ -545,12 +560,36 @@
 
   )
 
-(defn changestatusbyid  [status oid]
+(defn sendrefresh [channel-hub-key id]
+  (let  [
+          channel (get @channel-hub-key id)
+          ]
+    (when-not (nil? channel) (send! channel (json/write-str {:type "refresh" }) false))
+
+    )
+
+  )
+
+
+(defn changestatusbyid  [status oid channel-hub-key]
+
+  (let [
+         order (db/get-order-by-id  (ObjectId. oid))
+         factoryusers (db/get-factorys-by-cond {:factoryid (:factoryid order)})
+
+         ]
+
 
 
     (db/update-order-by-id {:_id (ObjectId. oid)} {:status status})
 
+    (future (dorun (map #(sendrefresh channel-hub-key (str (:_id %))) factoryusers)))
+
+    (future (sendrefresh channel-hub-key (:fromid order)))
+
     (resp/json {:success true})
+    )
+
 
 
 
@@ -573,9 +612,23 @@
 
   )
 
-(defn sendtowork [oid hasnum]
-  (db/update-order-by-id {:_id (ObjectId. oid)} {:status "1" :hasnum hasnum})
-  (resp/json {:success true})
+(defn sendtowork [oid hasnum channel-hub-key]
+
+  (let [
+         order (db/get-order-by-id  (ObjectId. oid))
+         factoryusers (db/get-factorys-by-cond {:factoryid (:factoryid order)})
+
+         ]
+    (db/update-order-by-id {:_id (ObjectId. oid)} {:status "1" :hasnum hasnum})
+
+    (future (dorun (map #(sendrefresh channel-hub-key (str (:_id %))) factoryusers)))
+
+    (future (sendrefresh channel-hub-key (:fromid order)))
+
+    (resp/json {:success true})
+    )
+
+
     )
 
 (defn gethasnumbygid  [gid]
@@ -589,15 +642,15 @@
 
   )
 
-(defn getgoodsbykeyword  [keyword page limit]
+(defn getgoodsbykeyword  [keyword page limit ]
 
-  (resp/json (db/get-goods-by-keyword keyword (read-string page) (read-string limit)))
+  (resp/json (db/get-goods-by-keyword keyword  (read-string page) (read-string limit)))
 
   )
 (defn addgoodsbyfid  [factoryid goodsname price unit colors imgs]
 
   (try
-    (do (db/make-new-goods {:factoryid factoryid :goodsname goodsname
+    (do (db/make-new-goods {:factoryid factoryid :goodsname goodsname :time (l/local-now)
                         :price price :unit unit :colors colors :imgs imgs})
       (resp/json {:success true})
       )
@@ -646,10 +699,10 @@
 
                   (future (do (chatprocess {:type "factorychat" :fromtype 1
                                 :from fromid :to toid
-                                :content "已添加您为医生好友!" :imgid -1} channel-hub-key)
+                                :content "已添加您为夥伴!" :imgid -1} channel-hub-key)
                             (chatprocess {:type "factorychat" :fromtype 1
                                           :from toid :to fromid
-                                          :content "已添加您为医生好友!" :imgid -1} channel-hub-key)
+                                          :content "已添加您为合作夥伴!" :imgid -1} channel-hub-key)
 
                             ))
 

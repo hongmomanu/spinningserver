@@ -5,7 +5,7 @@
     [monger.core :as mg]
     [monger.collection :as mc]
     [monger.operators :refer :all]
-    [monger.query :refer [with-collection find options paginate] ]
+    [monger.query :refer [with-collection find options paginate sort] ]
     ))
 
 #_(def db-store (str (.getName (io/file ".")) "/site.db"))
@@ -20,7 +20,7 @@
 
 #_(defqueries "sql/queries.sql" {:connection db-spec})
 
-  (defonce db (let [uri (get (System/getenv) "MONGOHQ_URL" "mongodb://jack:1313@127.0.0.1/spinningapp")
+  (defonce db (let [uri (get (System/getenv) "MONGOHQ_URL" "mongodb://jack:1313@111.1.76.108/spinningapp")
                     {:keys [conn db]} (mg/connect-via-uri uri)]
                 db))
 
@@ -116,10 +116,12 @@
       )
     )
 
-  (defn get-goods-by-keyword [keyword page limit]
+  (defn get-goods-by-keyword [keyword  page limit]
 
     (with-collection db "factorygoods"
       (find {:goodsname {$regex (str ".*" keyword ".*")}})
+
+      (sort (array-map :time -1))
       (paginate :page page :per-page limit))
     )
 
@@ -139,10 +141,26 @@
     (mc/update db "factorygoodsorders" cond {$set modified} {:multi false})
     )
 
+  (defn alterorde [cond data]
+
+    (mc/update db "factorygoodsorders" cond {$set data} )
+    )
+
   (defn get-orders-by-cond [cond stausarr]
 
-    (mc/find-maps
+    (with-collection db "factorygoodsorders"
+      (find (conj cond {:status {$in stausarr}}))
+      (sort {:time -1})
+      )
+
+    #_(mc/find-maps
       db "factorygoodsorders" (conj cond {:status {$in stausarr}})
+      )
+    )
+  (defn get-order-by-id [oid]
+
+    (mc/find-map-by-id
+      db "factorygoodsorders" oid
       )
     )
   (defn make-new-goods [good]

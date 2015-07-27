@@ -63,7 +63,12 @@
 
   (POST "/customer/makeorderbyid" [gid nums unit fromid factoryid colors]
 
-    (customer/makeorderbyid gid nums unit fromid factoryid colors)
+    (customer/makeorderbyid gid nums unit fromid factoryid colors websocket/channel-hub-key)
+
+    )
+  (POST "/customer/alterorderbyid" [oid num factoryid]
+
+    (customer/alterorderbyid oid num factoryid websocket/channel-hub-key)
 
     )
 
