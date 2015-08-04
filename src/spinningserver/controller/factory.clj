@@ -644,7 +644,14 @@
 
 (defn getgoodsbykeyword  [keyword page limit ]
 
-  (resp/json (db/get-goods-by-keyword keyword  (read-string page) (read-string limit)))
+  (let [
+         goods (db/get-goods-by-keyword keyword  (read-string page) (read-string limit))
+         goodswithfactoryinfo (map #(conj % {:factoryinfo (db/get-factoryinfo-byid (ObjectId. (:factoryid %) )) }) goods)
+         ]
+    (resp/json goodswithfactoryinfo)
+    )
+
+
 
   )
 (defn addgoodsbyfid  [factoryid goodsname price unit colors imgs]
