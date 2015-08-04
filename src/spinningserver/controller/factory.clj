@@ -549,7 +549,7 @@
   (let [
           stausarr (clojure.string/split status #",")
           orders (db/get-orders-by-cond {:fromid clientid} stausarr)
-          ordersdetail (do (map #(conj % {:goodinfo (db/get-goods-byid (ObjectId. (:gid %)))}) orders))
+          ordersdetail (do (map #(conj % {:factoryinfo (db/get-factoryinfo-byid (ObjectId. (:factoryid %) )) :goodinfo (db/get-goods-byid (ObjectId. (:gid %)))}) orders))
          ]
 
 
